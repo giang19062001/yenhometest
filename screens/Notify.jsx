@@ -1,9 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Alert, PermissionsAndroid, Platform} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
-export default function Notify() {
-const [token, setToken] = useState('');
+export default function Notify({navigation}) {
+  const [token, setToken] = useState('');
 
   const init = async () => {
     if (Platform.OS === 'android') {
@@ -30,9 +38,30 @@ const [token, setToken] = useState('');
   }, []);
 
   return (
-     <View style={{padding: 20}}>
+    <View style={{ padding: 20 }}>
       <Text>FCM Token:</Text>
       <Text selectable>{token}</Text>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Index')}
+      >
+        <Text style={styles.buttonText}>Về trang chủ</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#aeb7bd',
+    padding: 5,
+    borderRadius: 0,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});

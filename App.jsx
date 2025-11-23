@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import PhoneAuthScreen from './screens/PhoneAuth';
 import Notify from './screens/Notify';
 import UserHomeScreen from './screens/UserHome';
+import IndexScreen from './screens/Index';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,10 +26,17 @@ function App() {
 
 function AppContent() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='UserHome'>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Index"
+    >
+      <Stack.Screen name="Index" component={IndexScreen} />
       <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
       <Stack.Screen name="Notify" component={Notify} />
-      <Stack.Screen name="UserHome" component={UserHomeScreen} />
+      <Stack.Screen
+        name="UserHome"
+        component={UserHomeScreen}
+      />
     </Stack.Navigator>
   );
 }

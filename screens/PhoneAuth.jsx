@@ -62,9 +62,9 @@ export default function PhoneAuthScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('UserHome')}
+        onPress={() => navigation.navigate('Index')}
       >
-        <Text style={styles.buttonText}>Qua màn hình danh sách nhà yến</Text>
+        <Text style={styles.buttonText}>Về trang chủ</Text>
       </TouchableOpacity>
     </View>
   );

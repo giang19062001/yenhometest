@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -76,34 +77,43 @@ const UserHomeScreen = ({ navigation }) => {
     setHomes(DATA);
   }, []);
 
-  useEffect(() => {
-    // if (socketRef.current) return;
+  // Navigation KHÔNG unmount screen thực sự -> disconnect ko được gọi  -> dùng useFocusEffect()
+  useFocusEffect(
+    useCallback(() => {
+      // Khi screen được FOCUS -> connect socket
+      if (!socketRef.current) {
+        socketRef.current = io(SOCKET_URL, {
+          transports: ['websocket'],
+        });
 
-    socketRef.current = io(SOCKET_URL, {
-      transports: ['websocket'],
-      autoConnect: true,
-    });
+        socketRef.current.on('connect', () => {
+          socketRef.current.emit('joinUserHomesRoom', {
+            userCode: USER_CODE,
+          });
+        });
 
-    // kết nối và gửi sự kiện để join phòng danh sách yến
-    socketRef.current.on('connect', () => {
-      socketRef.current.emit('joinUserHomeListRoom', {
-        userCode: USER_CODE,
-      });
-    });
+        socketRef.current.on('userhome-sensor-data', payload => {
+          let newMap = {};
+          payload.data.forEach(item => {
+            newMap[item.userHomeCode] = {
+              temperature: item.temperature,
+              humidity: item.humidity,
+              current: item.current,
+            };
+          });
+          setSensorData(newMap);
+        });
+      }
 
-    // Nhận toàn bộ data realtime của user
-    socketRef.current.on('userhome-sensor-data', payload => {
-      let newMap = {};
-      payload.data.forEach(item => {
-        newMap[item.userHomeCode] = {
-          temperature: item.temperature,
-          humidity: item.humidity,
-          current: item.current,
-        };
-      });
-      setSensorData(newMap);
-    });
-  }, [homes, homes.length]);
+      // Cleanup: Khi screen bị BLUR -> disconnect
+      return () => {
+        if (socketRef.current) {
+          socketRef.current.disconnect();
+          socketRef.current = null;
+        }
+      };
+    }, []), // chạy 1 lần
+  );
 
   const renderItem = ({ item }) => {
     const rt = sensorData[item.userHomeCode];
@@ -151,9 +161,9 @@ const UserHomeScreen = ({ navigation }) => {
           <View style={{ paddingHorizontal: 20 }}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('PhoneAuth')}
+              onPress={() => navigation.navigate('Index')}
             >
-              <Text style={styles.buttonText}>Qua màn hình gửi OTP</Text>
+              <Text style={styles.buttonText}>Về trang chủ</Text>
             </TouchableOpacity>
           </View>
         }
