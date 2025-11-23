@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://192.168.1.6:3502/UserHomeListSocket'; // url
+const SOCKET_URL = 'http://192.168.1.6:3502/UserHomesSocket'; // url
 const USER_CODE = 'USR000001';
 const DATA = [
   {
