@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "207074507775",
+    "project_id": "yenhome-13b4c",
+    "storage_bucket": "yenhome-13b4c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207074507775:android:3894f19b8ae0a1302f05ca",
+        "android_client_info": {
+          "package_name": "com.yenhometest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMGGA7fKuhpovfCApktR7pD2tTozeOgS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

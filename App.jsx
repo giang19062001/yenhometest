@@ -1,16 +1,12 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import PhoneAuthScreen from './screens/PhoneAuth'
+import Notify from './screens/Notify';
+
+
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -28,10 +24,8 @@ function AppContent() {
 
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+      {/* <PhoneAuthScreen /> */}
+      <Notify/>
     </View>
   );
 }
