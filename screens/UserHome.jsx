@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import io from 'socket.io-client';
 
-const SOCKET_URL = 'http://3.107.58.138/socket/userHomes'; // url
-// const SOCKET_URL = 'http://172.16.20.134:3502/socket/userHomes'; // url
+const SOCKET_URL = 'http://3.107.58.138/socket/homesOfUser'; // url
+// const SOCKET_URL = 'http://172.16.20.134:3502/socket/homesOfUser'; // url
 
 const USER_CODE = 'USR000001';
 const DATA = [
@@ -40,30 +40,30 @@ const DATA = [
     isTriggered: 'Y',
     isMain: 'N',
   },
-  {
-    seq: 3,
-    userCode: 'USR000001',
-    userHomeCode: 'HOM000003',
-    userHomeName: 'Nhà yến 3',
-    userHomeAddress: '81 An giang',
-    userHomeProvince: 'An Giang',
-    isIntegateTempHum: 'N',
-    isIntegateCurrent: 'Y',
-    isTriggered: 'Y',
-    isMain: 'N',
-  },
-  {
-    seq: 4,
-    userCode: 'USR000001',
-    userHomeCode: 'HOM000004',
-    userHomeName: 'Nhà yến 4',
-    userHomeAddress: '81 An giang',
-    userHomeProvince: 'An Giang',
-    isIntegateTempHum: 'N',
-    isIntegateCurrent: 'N',
-    isTriggered: 'N',
-    isMain: 'N',
-  },
+  // {
+  //   seq: 3,
+  //   userCode: 'USR000001',
+  //   userHomeCode: 'HOM000003',
+  //   userHomeName: 'Nhà yến 3',
+  //   userHomeAddress: '81 An giang',
+  //   userHomeProvince: 'An Giang',
+  //   isIntegateTempHum: 'N',
+  //   isIntegateCurrent: 'Y',
+  //   isTriggered: 'Y',
+  //   isMain: 'N',
+  // },
+  // {
+  //   seq: 4,
+  //   userCode: 'USR000001',
+  //   userHomeCode: 'HOM000004',
+  //   userHomeName: 'Nhà yến 4',
+  //   userHomeAddress: '81 An giang',
+  //   userHomeProvince: 'An Giang',
+  //   isIntegateTempHum: 'N',
+  //   isIntegateCurrent: 'N',
+  //   isTriggered: 'N',
+  //   isMain: 'N',
+  // },
 ];
 
 const UserHomeScreen = ({ navigation }) => {
@@ -87,21 +87,25 @@ const UserHomeScreen = ({ navigation }) => {
         });
 
         socketRef.current.on('connect', () => {
-          socketRef.current.emit('joinUserHomesRoom', {
+          socketRef.current.emit('joinRoom', {
             userCode: USER_CODE,
-            userHomeCodes: homes.map(item => item.userHomeCode).join(',')
+            userHomeCodes: homes.map(item => item.userHomeCode)
+          });
+          console.log( {
+            userCode: USER_CODE,
+            userHomeCodes: homes.map(item => item.userHomeCode)
           });
         });
 
-        socketRef.current.on('streamUserHomesSensorData', payload => {
+        socketRef.current.on('streamSensorData', data => {
           let newMap = {};
-          payload.data.forEach(item => {
-            newMap[item.userHomeCode] = {
-              temperature: item.temperature,
-              humidity: item.humidity,
-              current: item.current,
-            };
-          });
+          data.forEach(item => {
+              newMap[item.userHomeCode] = {
+                temperature: item.temperature,
+                humidity: item.humidity,
+                current: item.current,
+              };
+            });
           setSensorData(newMap);
         });
       }
@@ -109,7 +113,7 @@ const UserHomeScreen = ({ navigation }) => {
       // Cleanup: Khi screen bị BLUR -> disconnect
       return () => {
         if (socketRef.current) {
-          socketRef.current.emit('leaveUserHomesRoom', { userCode: USER_CODE }); // rời phòng
+          socketRef.current.emit('leaveRoom', { userCode: USER_CODE }); // rời phòng
           socketRef.current.disconnect(); // disconnect với server
           socketRef.current = null;
         }
